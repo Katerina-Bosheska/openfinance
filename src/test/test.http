@@ -1,0 +1,83 @@
+POST http://localhost:8080/account/create
+Content-Type: application/x-www-form-urlencoded
+
+name=акаунт1&edb=edb5&bill=bill3&type=2
+
+###
+
+GET http://localhost:8080/account
+
+###
+
+PATCH http://localhost:8080/account/edit/2
+Content-Type: application/x-www-form-urlencoded
+
+name=smenetakaunt&edb=edb1&bill=bill1
+
+###
+
+DELETE http://localhost:8080/account/delete/1009
+Content-Type: application/x-www-form-urlencoded
+
+
+###
+
+POST http://localhost:8080/transaction/create
+Content-Type: application/x-www-form-urlencoded
+
+payerid=2&recipientid=3&konto=kontobrat&program=20&amount=12314&dateStr=07.04.2020
+
+###
+
+POST http://localhost:8080/transaction/payer
+Content-Type: application/x-www-form-urlencoded
+
+name=akaunt2
+
+###
+
+GET http://localhost:8080/transaction
+
+###
+
+POST http://localhost:8080/transaction/payer/paginated
+Content-Type: application/x-www-form-urlencoded
+
+name=smenetakaunt
+
+###
+
+GET http://localhost:8080/number/transactions
+
+###
+
+GET http://localhost:8080/transaction/filter?payername=&recipientname=&from=2020-04-02&to=2020-04-07
+
+###
+
+GET http://localhost:8080/transaction/filter/global?value=akaunt1
+
+###
+
+GET http://localhost:8080/account/recipients/ordered?number=3
+
+###
+
+GET http://localhost:8080/transaction/sorted?from=2020-03-01&to=2020-05-01&number=5
+
+###
+
+POST http://localhost:8080/budget/create
+Content-Type: application/x-www-form-urlencoded
+
+accountid=1013&&bill=bill111&program=program111&konto=konto123&year=2020&amount=1200&plan=2000&realization=3000
+
+###
+
+GET http://localhost:8080/budget/filter/year?year=2019
+
+###
+
+GET http://localhost:8080/load/accounts
+
+###
