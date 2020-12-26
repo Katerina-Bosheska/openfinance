@@ -7,6 +7,8 @@ import com.example.openfinance.repository.TransactionRepository;
 import com.example.openfinance.service.TransactionService;
 import com.example.openfinance.service.exception.AccountException;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -139,6 +141,8 @@ public class TransactionServiceImpl implements TransactionService {
     // ZA TESTIRANJE
     @Override
     public List<AccountTransaction> findAllByPayerAndRecipient(int payerId, String recipientName) {
+        if(payerId == 0)
+            throw new IllegalArgumentException();
         List<AccountTransaction> transactions = transactionRepository.findAll();
         List<AccountTransaction> result =  new ArrayList<>();
         for(AccountTransaction t : transactions){
@@ -188,20 +192,33 @@ public class TransactionServiceImpl implements TransactionService {
     // ZA TESTIRANJE
     @Override
     public List<AccountTransaction> filterTransactions(String payerName, String recipientName, LocalDate from, LocalDate to) {
+        if(payerName.equals("") && recipientName.equals("") && from == null && to == null)
+            return this.getAllTransactions();
+        else {
+            if(from == null){
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+                long millis = formatter.parseMillis("2010-01-01");
+                from = new LocalDate(millis);
+            }
+            if(to == null) to = new LocalDate();
+            if(payerName == null) payerName = "";
+            if(recipientName == null) recipientName = "";
+        }
         List<AccountTransaction> transactions = transactionRepository.findAll();
         List<AccountTransaction> filtered = new ArrayList<>();
         for(AccountTransaction t : transactions){
-            if(t.getPayer().getName().toUpperCase().contains(payerName.toUpperCase()) && t.getRecipient().getName().toUpperCase().contains(recipientName.toUpperCase()))
-                filtered.add(t);
+            String tPayer = t.getPayer().getName().toLowerCase();
+            String tRecipient = t.getRecipient().getName().toLowerCase();
+            LocalDate tDate = t.getDate();
+            if(tPayer.contains(payerName.toLowerCase()) &&
+                    tRecipient.contains(recipientName.toLowerCase())){
+                if(tDate.isAfter(from) && tDate.isBefore(to)){
+                    filtered.add(t);
+                }
+            }
+
         }
-        // smeni go so kodche
-        List<AccountTransaction> betweenDates = this.findAllByDateBetween(from, to);
-        List<AccountTransaction> result = new ArrayList<>();
-        for(AccountTransaction t : filtered){
-            if(betweenDates.contains(t))
-                result.add(t);
-        }
-        return result;
+        return filtered;
     }
 
     @Override
@@ -220,9 +237,17 @@ public class TransactionServiceImpl implements TransactionService {
         return filtered;
     }
 
-    // MOZHDA ZA TESTIRANJE
+    //ZA TESTIRANJE
     @Override
     public List<AccountTransaction> findTopTransactions(LocalDate from, LocalDate to, int number) {
+        if(to.isBefore(from))
+            throw new IllegalArgumentException();
+        if(from == null){
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+            long millis = formatter.parseMillis("2010-01-01");
+            from = new LocalDate(millis);
+        }
+        if(to == null) to = new LocalDate();
         List<AccountTransaction> topTransactions = transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqualOrderByAmountDesc(from, to);
         if(topTransactions.size() < number){
             return topTransactions;
