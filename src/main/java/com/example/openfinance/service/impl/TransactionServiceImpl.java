@@ -10,17 +10,10 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.*;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -107,11 +100,6 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<AccountTransaction> getTransactionsByRecipientId(int id) {
         return transactionRepository.findAllByRecipientId(id);
-    }
-
-    @Override
-    public List<AccountTransaction> findAllByDateBetween(LocalDate from, LocalDate to) {
-        return transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqual(from, to);
     }
 
     @Override
@@ -242,17 +230,18 @@ public class TransactionServiceImpl implements TransactionService {
     public List<AccountTransaction> findTopTransactions(LocalDate from, LocalDate to, int number) {
         if(to.isBefore(from))
             throw new IllegalArgumentException();
-        if(from == null){
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-            long millis = formatter.parseMillis("2010-01-01");
-            from = new LocalDate(millis);
-        }
-        if(to == null) to = new LocalDate();
-        List<AccountTransaction> topTransactions = transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqualOrderByAmountDesc(from, to);
+        if(from == null || to == null)
+            throw new IllegalArgumentException();
+        List<AccountTransaction> topTransactions = this.findAllTransactionsBetweenDate(from, to);
         if(topTransactions.size() < number){
             return topTransactions;
         }
         return topTransactions.subList(0, number);
+    }
+
+    @Override
+    public List<AccountTransaction> findAllTransactionsBetweenDate(LocalDate from, LocalDate to){
+        return transactionRepository.findAllByDateGreaterThanEqualAndDateLessThanEqualOrderByAmountDesc(from, to);
     }
 
     @Override

@@ -129,6 +129,7 @@ public class Account {
     public void applyAccount(Account account){
         this.name = account.getName();
         this.EDB = account.getEDB();
+        this.address = account.getAddress();
         this.billNumber = account.getBillNumber();
         this.paidAmount = account.getPaidAmount();
         this.receivedAmount = account.getReceivedAmount();

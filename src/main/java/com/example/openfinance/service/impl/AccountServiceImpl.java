@@ -46,6 +46,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account editAccount(int toEditId, Account newAccount) throws AccountException {
+        if(newAccount == null)
+            throw new AccountException("You can't insert a null object");
         if(!accountRepository.existsById(toEditId))
             throw new AccountException("Account doesn't exist.");
         Account accountToEdit = this.getAccountById(toEditId);

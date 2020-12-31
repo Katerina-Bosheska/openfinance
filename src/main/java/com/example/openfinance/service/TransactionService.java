@@ -32,7 +32,7 @@ public interface TransactionService {
     List<AccountTransaction> getTransactionsByRecipientId(int id);
 
     //filter by date
-    List<AccountTransaction> findAllByDateBetween(LocalDate from, LocalDate to);
+    List<AccountTransaction> findAllTransactionsBetweenDate(LocalDate from, LocalDate to);
 
     //FILTERS OF PAYERS
     List<AccountTransaction> findAllByPayerAndDate(int payerId, LocalDate date);
