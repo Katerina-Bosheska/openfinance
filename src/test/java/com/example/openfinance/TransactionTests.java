@@ -1,6 +1,7 @@
 package com.example.openfinance;
 
 import com.example.openfinance.model.Account;
+import com.example.openfinance.model.AccountTransaction;
 import com.example.openfinance.service.AccountService;
 import com.example.openfinance.service.TransactionService;
 import com.example.openfinance.service.exception.AccountException;
@@ -13,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.List;
 
 @SpringBootTest
 public class TransactionTests {
@@ -27,6 +30,10 @@ public class TransactionTests {
         return new LocalDate(millis);
     }
 
+    boolean checkIfDateBetween(LocalDate date, LocalDate from, LocalDate to){
+        return date.isBefore(to) && date.isAfter(from);
+    }
+
 
     // TESTING findTopTransactions
 
@@ -35,7 +42,10 @@ public class TransactionTests {
     void testFindTopT1() {
         LocalDate from = this.createLocalDate("2020-04-01");
         LocalDate to = this.createLocalDate("2020-07-01");
-        Assertions.assertEquals(transactionService.findTopTransactions(from, to, 5).size(), 5);
+        List<AccountTransaction> topTransactions = transactionService.findTopTransactions(from, to, 5);
+        Assertions.assertEquals(topTransactions.size(), 5);
+        for(AccountTransaction t : topTransactions)
+            Assertions.assertTrue(this.checkIfDateBetween(t.getDate(), from, to));
     }
 
     // every parameter is valid, number is bigger than total number of transactions in db
@@ -45,7 +55,10 @@ public class TransactionTests {
         LocalDate from = this.createLocalDate("2020-04-01");
         LocalDate to = this.createLocalDate("2020-07-01");
         int totalNumOfTransactions = transactionService.findAllTransactionsBetweenDate(from, to).size();
-        Assertions.assertEquals(transactionService.findTopTransactions(from, to, 1000).size(), totalNumOfTransactions);
+        List<AccountTransaction> topTransactions = transactionService.findTopTransactions(from, to, 5);
+        Assertions.assertEquals(topTransactions.size(), totalNumOfTransactions);
+        for(AccountTransaction t : topTransactions)
+            Assertions.assertTrue(this.checkIfDateBetween(t.getDate(), from, to));
     }
 
     // every parameter is valid, from and to are equal
@@ -54,9 +67,12 @@ public class TransactionTests {
         LocalDate from = this.createLocalDate("2020-04-01");
         LocalDate to = this.createLocalDate("2020-04-01");
         int totalNumOfTransactions = transactionService.findAllTransactionsBetweenDate(from, to).size();
+        List<AccountTransaction> topTransactions = transactionService.findTopTransactions(from, to, 5);
         if(totalNumOfTransactions < 5)
-            Assertions.assertEquals(transactionService.findTopTransactions(from, to, 5).size(), totalNumOfTransactions);
-        else Assertions.assertEquals(transactionService.findTopTransactions(from, to, 5).size(), 5);
+            Assertions.assertEquals(topTransactions.size(), totalNumOfTransactions);
+        else Assertions.assertEquals(topTransactions.size(), 5);
+        for(AccountTransaction t : topTransactions)
+            Assertions.assertTrue(this.checkIfDateBetween(t.getDate(), from, to));
     }
 
     // from is after to, we expect the function to throw an exception
