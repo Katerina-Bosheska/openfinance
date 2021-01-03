@@ -3,6 +3,7 @@ package com.example.openfinance.service;
 import com.example.openfinance.model.Account;
 import com.example.openfinance.model.AccountTransaction;
 import com.example.openfinance.service.exception.AccountException;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.joda.time.LocalDate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public interface TransactionService {
 
     List<AccountTransaction> findAllByPayerAndAmount(int payerId, double from, double to);
 
-    List<AccountTransaction> findAllByPayerAndRecipient(int payerId, String recipientName);
+    List<AccountTransaction> findAllByPayerAndRecipient(int payerId, String recipientName) throws AccountException, TransactionNotFoundException;
 
     List<AccountTransaction> findAllByPayerBill(String bill);
 

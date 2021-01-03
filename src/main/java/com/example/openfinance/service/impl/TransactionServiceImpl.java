@@ -6,6 +6,7 @@ import com.example.openfinance.repository.AccountRepository;
 import com.example.openfinance.repository.TransactionRepository;
 import com.example.openfinance.service.TransactionService;
 import com.example.openfinance.service.exception.AccountException;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -128,10 +129,12 @@ public class TransactionServiceImpl implements TransactionService {
 
     // ZA TESTIRANJE
     @Override
-    public List<AccountTransaction> findAllByPayerAndRecipient(int payerId, String recipientName) {
+    public List<AccountTransaction> findAllByPayerAndRecipient(int payerId, String recipientName) throws AccountException, TransactionNotFoundException {
         if(payerId == 0)
-            throw new IllegalArgumentException();
+            throw new AccountException("No account with that id exists");
         List<AccountTransaction> transactions = transactionRepository.findAll();
+        if(transactions.size() == 0)
+            throw new TransactionNotFoundException("No transactions were found");
         List<AccountTransaction> result =  new ArrayList<>();
         for(AccountTransaction t : transactions){
             if(t.getPayer().getId() == payerId){
@@ -189,8 +192,6 @@ public class TransactionServiceImpl implements TransactionService {
                 from = new LocalDate(millis);
             }
             if(to == null) to = new LocalDate();
-            if(payerName == null) payerName = "";
-            if(recipientName == null) recipientName = "";
         }
         List<AccountTransaction> transactions = transactionRepository.findAll();
         List<AccountTransaction> filtered = new ArrayList<>();
