@@ -5,7 +5,10 @@ import com.example.openfinance.model.Budget;
 import com.example.openfinance.model.BudgetInfo;
 import com.example.openfinance.service.AccountService;
 import com.example.openfinance.service.BudgetService;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +20,23 @@ public class BudgetAPI {
 
     @Autowired
     private BudgetService budgetService;
-    @Autowired
-    private AccountService accountService;
 
     @GetMapping
-    public List<Budget> getAllBudgetTransactions(){
-        return budgetService.getAllBudgetTransactions();
+    public ResponseEntity getAllBudgetTransactions() throws TransactionNotFoundException {
+
+//        List<Budget> budgetTransactions = budgetService.getAllBudgetTransactions();
+//        if(budgetTransactions.isEmpty())
+//            throw new TransactionNotFoundException("No budget transactions were found.");
+//        return new ResponseEntity<List<Budget>>(budgetTransactions, HttpStatus.OK);
+        //return budgetService.getAllBudgetTransactions();
+
+        List<Budget> budgetTransactions = budgetService.getAllBudgetTransactions();
+        if(budgetTransactions.isEmpty())
+            return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body("No transactions were found");
+        return new ResponseEntity<List<Budget>>(budgetTransactions, HttpStatus.OK);
+
     }
 
     @PostMapping("/create")
@@ -35,7 +49,7 @@ public class BudgetAPI {
                                        @RequestParam double plan,
                                        @RequestParam double realization){
 
-        Account budgetUser = accountService.getAccountById(accountid);
+        Account budgetUser = budgetService.findAccount(accountid);
         Budget budgetTransaction = new Budget(budgetUser, bill, program, konto, year, amount, plan, realization);
         return budgetService.createBudgetTransaction(budgetTransaction);
     }

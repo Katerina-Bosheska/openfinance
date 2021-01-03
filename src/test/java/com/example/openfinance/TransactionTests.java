@@ -2,11 +2,7 @@ package com.example.openfinance;
 
 import com.example.openfinance.model.Account;
 import com.example.openfinance.model.AccountTransaction;
-import com.example.openfinance.service.AccountService;
 import com.example.openfinance.service.TransactionService;
-import com.example.openfinance.service.exception.AccountException;
-import jdk.vm.ci.meta.Local;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;

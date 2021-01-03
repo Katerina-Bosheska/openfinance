@@ -61,6 +61,11 @@ public class Account {
         this.budgetUsage = new ArrayList<>();
     }
 
+    public Account(String name, String billNumber){
+        this.name = name;
+        this.billNumber = billNumber;
+    }
+
     // GETTERS
 
     public String getAddress() {

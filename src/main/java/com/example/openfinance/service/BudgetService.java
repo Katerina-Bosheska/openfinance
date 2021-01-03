@@ -3,6 +3,7 @@ package com.example.openfinance.service;
 import com.example.openfinance.model.Account;
 import com.example.openfinance.model.Budget;
 import com.example.openfinance.model.BudgetInfo;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 
 import java.util.List;
 
@@ -10,11 +11,13 @@ public interface BudgetService {
 
     Budget createBudgetTransaction(Budget budgetTransaction);
 
+    Account findAccount(int accountId);
+
     void deleteBudgetTransaction(int id);
 
     Budget getBudgetTransaction(int id);
 
-    List<Budget> getAllBudgetTransactions();
+    List<Budget> getAllBudgetTransactions() throws TransactionNotFoundException;
 
     // FILTERING
     List<Budget> findAllByYear(int year);

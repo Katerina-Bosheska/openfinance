@@ -3,8 +3,10 @@ package com.example.openfinance.service.impl;
 import com.example.openfinance.model.Account;
 import com.example.openfinance.model.Budget;
 import com.example.openfinance.model.BudgetInfo;
+import com.example.openfinance.repository.AccountRepository;
 import com.example.openfinance.repository.BudgetRepository;
 import com.example.openfinance.service.BudgetService;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,14 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Autowired
     private BudgetRepository budgetRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Override
+    public Account findAccount(int accountId){
+        return accountRepository.getOne(accountId);
+    }
 
     @Override
     public Budget createBudgetTransaction(Budget budgetTransaction) {
@@ -33,8 +43,12 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public List<Budget> getAllBudgetTransactions(){
-        return budgetRepository.findAll();
+    public List<Budget> getAllBudgetTransactions() throws TransactionNotFoundException {
+
+        List<Budget> budgetTransactions = budgetRepository.findAll();
+        if(budgetTransactions.size() == 0)
+            throw new TransactionNotFoundException("No transactions were found.");
+        return budgetTransactions;
     }
 
     @Override
