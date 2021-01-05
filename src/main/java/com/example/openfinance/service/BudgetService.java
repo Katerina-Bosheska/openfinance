@@ -19,6 +19,8 @@ public interface BudgetService {
 
     List<Budget> getAllBudgetTransactions() throws TransactionNotFoundException;
 
+    public boolean transactionExistsById(int id);
+
     // FILTERING
     List<Budget> findAllByYear(int year);
 

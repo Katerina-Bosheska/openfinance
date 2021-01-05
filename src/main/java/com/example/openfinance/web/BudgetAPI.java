@@ -5,12 +5,17 @@ import com.example.openfinance.model.Budget;
 import com.example.openfinance.model.BudgetInfo;
 import com.example.openfinance.service.AccountService;
 import com.example.openfinance.service.BudgetService;
+import com.example.openfinance.service.exception.AccountException;
 import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.util.NestedServletException;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Null;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -39,34 +44,49 @@ public class BudgetAPI {
 
     }
 
-    @PostMapping("/create")
-    public Budget addBudgetTransaction(@RequestParam int accountid,
-                                       @RequestParam String bill,
-                                       @RequestParam String program,
-                                       @RequestParam String konto,
-                                       @RequestParam int year,
-                                       @RequestParam double amount,
-                                       @RequestParam double plan,
-                                       @RequestParam double realization){
+//    @PostMapping("/create")
+//    public Budget addBudgetTransaction(@RequestParam int accountid,
+//                                       @RequestParam String bill,
+//                                       @RequestParam String program,
+//                                       @RequestParam String konto,
+//                                       @RequestParam int year,
+//                                       @RequestParam double amount,
+//                                       @RequestParam double plan,
+//                                       @RequestParam double realization){
+//
+//        Account budgetUser = budgetService.findAccount(accountid);
+//        Budget budgetTransaction = new Budget(budgetUser, bill, program, konto, year, amount, plan, realization);
+//        return budgetService.createBudgetTransaction(budgetTransaction);
+//    }
 
-        Account budgetUser = budgetService.findAccount(accountid);
-        Budget budgetTransaction = new Budget(budgetUser, bill, program, konto, year, amount, plan, realization);
-        return budgetService.createBudgetTransaction(budgetTransaction);
+    @PostMapping("/create")
+    public ResponseEntity<Budget> addBudgetTransaction(@Valid @RequestBody Budget createTransaction) throws AccountException {
+
+        if(budgetService.transactionExistsById(createTransaction.getId())){
+            throw new HttpClientErrorException(HttpStatus.CONFLICT, "Transaction already exists");
+        }
+        return new ResponseEntity<Budget>(budgetService.createBudgetTransaction(createTransaction), HttpStatus.CREATED);
     }
 
     @GetMapping("/delete")
-    public void deleteBudgetTransaction(@RequestParam int id){
+    public ResponseEntity deleteBudgetTransaction(@RequestParam int id) throws TransactionNotFoundException {
+
+        if(!budgetService.transactionExistsById(id)){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Transaction with that id was not found");
+        }
         budgetService.deleteBudgetTransaction(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Budget transaction successfully deleted");
+    }
+
+    @GetMapping("/filter/name")
+    public List<Budget> findByAccountName(@RequestParam String name){
+
+        return budgetService.findAllByAccountName(name);
     }
 
     @GetMapping("/filter/year")
     public List<Budget> findByYear(@RequestParam int year){
         return budgetService.findAllByYear(year);
-    }
-
-    @GetMapping("/filter/name")
-    public List<Budget> findByAccountName(@RequestParam String name){
-        return budgetService.findAllByAccountName(name);
     }
 
     @GetMapping("/filter/bill")

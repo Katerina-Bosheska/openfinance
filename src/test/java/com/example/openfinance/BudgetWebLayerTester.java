@@ -3,24 +3,35 @@ package com.example.openfinance;
 import com.example.openfinance.model.Account;
 import com.example.openfinance.model.Budget;
 import com.example.openfinance.service.BudgetService;
+import com.example.openfinance.service.exception.AccountException;
 import com.example.openfinance.service.exception.TransactionNotFoundException;
 import com.example.openfinance.web.BudgetAPI;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mysql.cj.x.protobuf.MysqlxCursor;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.NestedCheckedException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.util.NestedServletException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +97,42 @@ public class BudgetWebLayerTester {
                 .andReturn();
 
         Assertions.assertEquals(result.getResponse().getContentAsString(), "No transactions were found");
+    }
+
+    @Test
+    public void addBudgetTransactionReturnsOk() throws Exception {
+
+        Account account = new Account("Ministerstvo za zdravstvo", "421231231");
+        Budget budgetTransaction = new Budget(account, "Osnoven budget", "Zdravstveno osiguruvanje", "Blok dotacii", 2018, 16140905, 534300, 5345700);
+
+        Mockito.when(budgetService.transactionExistsById(Mockito.any(Integer.class))).thenReturn(false);
+        Mockito.when(budgetService.createBudgetTransaction(Mockito.any(Budget.class))).thenReturn(budgetTransaction);
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.post("/budget/create")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .characterEncoding("UTF-8")
+                .content(this.objectMapper.writeValueAsBytes(budgetTransaction));
+
+        mockMvc.perform(builder).andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(this.objectMapper.writeValueAsString(budgetTransaction)));
+    }
+
+    @Test
+    public void deleteBudgetTransactionNoutFound() throws Exception {
+
+        Mockito.when(budgetService.transactionExistsById(1050)).thenReturn(false);
+
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .get("/budget/delete")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON).characterEncoding("UTF-8")
+                .param("id", "1050");
+
+        MvcResult mvcResult = mockMvc.perform(builder).andExpect(status().isNotFound()).andReturn();
+
+        Assertions.assertEquals(mvcResult.getResponse().getContentAsString(), "Transaction with that id was not found");
+
     }
 
 }

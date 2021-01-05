@@ -29,7 +29,13 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public Budget createBudgetTransaction(Budget budgetTransaction) {
+
         return budgetRepository.save(budgetTransaction);
+    }
+
+    @Override
+    public boolean transactionExistsById(int id){
+        return budgetRepository.existsById(id);
     }
 
     @Override
