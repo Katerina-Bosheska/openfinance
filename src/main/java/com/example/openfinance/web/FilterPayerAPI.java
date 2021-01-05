@@ -2,6 +2,8 @@ package com.example.openfinance.web;
 
 import com.example.openfinance.model.AccountTransaction;
 import com.example.openfinance.service.TransactionService;
+import com.example.openfinance.service.exception.AccountException;
+import com.example.openfinance.service.exception.TransactionNotFoundException;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -49,7 +51,7 @@ public class FilterPayerAPI {
 
     @GetMapping("/recipient")
     List<AccountTransaction> findAllByPayerAndRecipient(@RequestParam int payerid,
-                                                        @RequestParam String name){
+                                                        @RequestParam String name) throws AccountException, TransactionNotFoundException {
         return transactionService.findAllByPayerAndRecipient(payerid, name);
     }
 }
