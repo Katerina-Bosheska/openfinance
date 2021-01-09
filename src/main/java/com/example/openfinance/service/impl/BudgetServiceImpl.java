@@ -59,6 +59,7 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public List<Budget> findAllByYear(int year) {
+
         return budgetRepository.findAllByYear(year);
     }
 

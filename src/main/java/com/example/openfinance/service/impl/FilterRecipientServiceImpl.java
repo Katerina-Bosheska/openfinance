@@ -20,6 +20,19 @@ public class FilterRecipientServiceImpl implements FilterRecipientService {
     @Autowired
     private AccountRepository accountRepository;
 
+    public List<AccountTransaction> getAllRecipientTransactions(){
+        return transactionRepository.findAll();
+    }
+
+    public AccountTransaction getRecipientId(int id){
+        List<AccountTransaction> transactions = transactionRepository.findAll();
+        for(AccountTransaction t : transactions){
+            if(t.getId() == id)
+                return t;
+        }
+        return null;
+    }
+
     @Override
     public List<AccountTransaction> findAllByRecipientAndDate(int recipientid, LocalDate date) {
         Account recipient = accountRepository.getOne(recipientid);

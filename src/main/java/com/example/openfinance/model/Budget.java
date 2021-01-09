@@ -61,6 +61,16 @@ public class Budget {
         this.budgetRealization = budget.getBudgetRealization();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof Budget))
+            return false;
+        Budget other = (Budget) o;
+        return this.Id == other.getId();
+    }
+
     //GETTERS
 
     public int getId() {

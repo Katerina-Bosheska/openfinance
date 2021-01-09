@@ -115,6 +115,8 @@ public class Account {
         this.name = name;
     }
 
+    public void setId(int id){ this.id = id;}
+
     public void setEDB(String EDB) {
         this.EDB = EDB;
     }
