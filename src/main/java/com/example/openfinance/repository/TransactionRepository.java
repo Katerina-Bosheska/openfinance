@@ -61,6 +61,8 @@ public interface TransactionRepository extends JpaRepository<AccountTransaction,
     // filter by date
     List<AccountTransaction> findAllByDateAfterAndDateBefore(LocalDate from, LocalDate to);
 
+    List<AccountTransaction> findAllByRecipientAndDateAfterAndDateBefore(Account recipient, LocalDate from, LocalDate to);
+
     List<AccountTransaction> findAllByDateGreaterThanEqualAndDateLessThanEqual(LocalDate from, LocalDate to);
 
     // ordered

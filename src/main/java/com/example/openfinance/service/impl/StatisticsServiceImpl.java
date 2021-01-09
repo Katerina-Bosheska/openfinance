@@ -5,6 +5,7 @@ import com.example.openfinance.model.AccountTransaction;
 import com.example.openfinance.repository.AccountRepository;
 import com.example.openfinance.repository.TransactionRepository;
 import com.example.openfinance.service.StatisticsService;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
     private TransactionRepository transactionRepository;
 
@@ -44,6 +46,34 @@ public class StatisticsServiceImpl implements StatisticsService {
     @Override
     public List<AccountTransaction> topPayersOfMonth() throws ParseException {
         return allTransactionsOfMonth();
+    }
+
+    public double avgTransactionAmount(LocalDate from, LocalDate to){
+        List<AccountTransaction> transactions = transactionRepository.findAllByDateAfterAndDateBefore(from, to);
+        double sum = 0.0;
+        for(AccountTransaction t : transactions){
+            double amount = t.getAmount();
+            sum += amount;
+        }
+        return sum/transactions.size();
+    }
+
+    public Account findMaxRecipient(LocalDate from, LocalDate to){
+        List<Account> accounts = accountRepository.findAll();
+        double maxAmount = 0;
+        Account maxRecipient = null;
+        for(Account a : accounts){
+            List<AccountTransaction> transactionsByAccount = transactionRepository.findAllByRecipientAndDateAfterAndDateBefore(a, from, to);
+            double totalAmountByAccount = 0;
+            for(AccountTransaction t : transactionsByAccount){
+                totalAmountByAccount += t.getAmount();
+            }
+            if(totalAmountByAccount > maxAmount){
+                maxAmount = totalAmountByAccount;
+                maxRecipient = a;
+            }
+        }
+        return maxRecipient;
     }
 
     @Override
