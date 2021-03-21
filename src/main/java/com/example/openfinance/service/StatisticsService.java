@@ -18,8 +18,4 @@ public interface StatisticsService {
 
     public int getNumberOfTransactions();
 
-    List<AccountTransaction> topPayersOfMonth() throws ParseException;
-
-    List<Account> topRecipientsOfMonth(int month);
-
 }

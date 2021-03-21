@@ -46,9 +46,9 @@ public class StatisticsAPI {
         return statisticsService.getNumberOfIndividuals();
     }
 
-    @GetMapping("/transactions")
-    public List<AccountTransaction> getTransactionsOfMonth() throws ParseException {
-        Date date = new Date();
-        return statisticsService.topPayersOfMonth();
-    }
+//    @GetMapping("/transactions")
+//    public List<AccountTransaction> getTransactionsOfMonth() throws ParseException {
+//        Date date = new Date();
+//        return statisticsService.topPayersOfMonth();
+//    }
 }

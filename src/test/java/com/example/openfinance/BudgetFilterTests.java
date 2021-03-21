@@ -39,14 +39,13 @@ public class BudgetFilterTests {
     private BudgetServiceImpl budgetService;
 
     @Test
-    public void testFindByYear(){
+    public void testFindByBill(){
         List<Budget> budgetList = new ArrayList<>();
 
         Account a1 = new Account("Министерство за здравство", "25252525");
         Account a2 = new Account("Министерство за финансии", "25252525");
         Account a3 = new Account("Фонд за пензиско осигурување", "41287987");
         Account a4 = new Account("Фонд за труд и социјала", "872312311");
-
         Budget b1 = new Budget(a1, "Основен буџет", "Здравствена дејност и осигурување", "Блок дотации", 2018, 16140905, 534300, 5345700);
         Budget b2 = new Budget(a2, "Основен буџет", "Пренесување на надлежности на ЕЛС", "Трансфери", 2018, 16140905, 534300, 5345700);
         Budget b3 = new Budget(a3, "Буџет за фондови", "Пензиско и инавлидско осигурување", "Трансфери до Фондот за ПИОМ", 2017, 16140905, 534300, 53400);

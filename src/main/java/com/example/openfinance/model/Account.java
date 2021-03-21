@@ -3,11 +3,13 @@ package com.example.openfinance.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sun.istack.NotNull;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 public class Account {
 
@@ -66,73 +68,6 @@ public class Account {
         this.billNumber = billNumber;
     }
 
-    // GETTERS
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEDB() {
-        return EDB;
-    }
-
-    public List<AccountTransaction> getTransactions() {
-        return transactions;
-    }
-
-    public List<Budget> getBudgetUsage() {
-        return budgetUsage;
-    }
-
-    public String getBillNumber() {
-        return billNumber;
-    }
-
-    public double getPaidAmount() {
-        return paidAmount;
-    }
-
-    public double getReceivedAmount() {
-        return receivedAmount;
-    }
-
-    public int getType() { return type; }
-
-    //SETTERS
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setId(int id){ this.id = id;}
-
-    public void setEDB(String EDB) {
-        this.EDB = EDB;
-    }
-
-    public void setTransactions(List<AccountTransaction> transactions) {
-        this.transactions = transactions;
-    }
-
-    public void setBudgetUsage(List<Budget> budgetUsage) {
-        this.budgetUsage = budgetUsage;
-    }
-
-    public void setBillNumber(String billNumber) {
-        this.billNumber = billNumber;
-    }
-
     public void applyAccount(Account account){
         this.name = account.getName();
         this.EDB = account.getEDB();
@@ -145,12 +80,15 @@ public class Account {
         this.budgetUsage = account.getBudgetUsage();
     }
 
-    //AMOUNT UPDATE
     public void updatePaidAmount(double amount){
         this.paidAmount += amount;
     }
 
     public void updateReceivedAmount(double amount){
         this.receivedAmount += amount;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 }

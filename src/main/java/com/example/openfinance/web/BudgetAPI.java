@@ -1,9 +1,7 @@
 package com.example.openfinance.web;
 
-import com.example.openfinance.model.Account;
 import com.example.openfinance.model.Budget;
 import com.example.openfinance.model.BudgetInfo;
-import com.example.openfinance.service.AccountService;
 import com.example.openfinance.service.BudgetService;
 import com.example.openfinance.service.exception.AccountException;
 import com.example.openfinance.service.exception.TransactionNotFoundException;
@@ -12,10 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.util.NestedServletException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Null;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -124,7 +120,7 @@ public class BudgetAPI {
 
     @GetMapping("/sum")
     public List<BudgetInfo> getBudgetInfo(@RequestParam int from,
-                                    @RequestParam int to){
+                                          @RequestParam int to){
         return budgetService.getBudgetInfo(from, to);
     }
 

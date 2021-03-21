@@ -1,5 +1,8 @@
 package com.example.openfinance.model;
 
+import lombok.Getter;
+
+@Getter
 public class BudgetInfo {
 
     private int year;
@@ -14,19 +17,4 @@ public class BudgetInfo {
         this.realization = realization;
     }
 
-    public int getYear() {
-        return year;
-    }
-
-    public double getAmount() {
-        return amount;
-    }
-
-    public double getPlan() {
-        return plan;
-    }
-
-    public double getRealization() {
-        return realization;
-    }
 }

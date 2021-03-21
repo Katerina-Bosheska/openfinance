@@ -51,7 +51,7 @@ public class TransactionTests {
         LocalDate from = this.createLocalDate("2020-04-01");
         LocalDate to = this.createLocalDate("2020-07-01");
         int totalNumOfTransactions = transactionService.findAllTransactionsBetweenDate(from, to).size();
-        List<AccountTransaction> topTransactions = transactionService.findTopTransactions(from, to, 5);
+        List<AccountTransaction> topTransactions = transactionService.findTopTransactions(from, to, 100);
         Assertions.assertEquals(topTransactions.size(), totalNumOfTransactions);
         for(AccountTransaction t : topTransactions)
             Assertions.assertTrue(this.checkIfDateBetween(t.getDate(), from, to));
@@ -76,7 +76,8 @@ public class TransactionTests {
     void testFindTopT4() throws IllegalArgumentException {
         LocalDate from = this.createLocalDate("2020-05-01");
         LocalDate to = this.createLocalDate("2020-04-01");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> transactionService.findTopTransactions(from, to, 5));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                transactionService.findTopTransactions(from, to, 5));
     }
 
     // number is zero, we expect an empty list
@@ -91,21 +92,24 @@ public class TransactionTests {
     void testFindTopT6() throws IllegalArgumentException{
         LocalDate from = this.createLocalDate("2020-04-01");
         LocalDate to = this.createLocalDate("2020-07-01");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> transactionService.findTopTransactions(from, to, 5));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                transactionService.findTopTransactions(from, to, -5));
     }
 
     // to is null
     @Test
     void testFindTopT7() throws IllegalArgumentException{
         LocalDate from = this.createLocalDate("2020-04-01");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> transactionService.findTopTransactions(from, null, 5));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                transactionService.findTopTransactions(from, null, 5));
     }
 
     // from is null
     @Test
     void testFindTopT8() throws IllegalArgumentException{
         LocalDate to = this.createLocalDate("2020-07-01");
-        Assertions.assertThrows(IllegalArgumentException.class, () -> transactionService.findTopTransactions(null, to, 5));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->
+                transactionService.findTopTransactions(null, to, 5));
     }
 
 }

@@ -19,7 +19,8 @@ public class AccountTests {
     //newAccount isn't null, the id exists in db
     @Test
     void testEditAccountA1B1() throws AccountException {
-        Account newAccount = new Account("testAkaunt", "testEdb", "testBill", "testAddr", 1, 0, 0);
+        Account newAccount = new Account("testAkaunt", "testEdb", "testBill",
+                "testAddr", 1, 0, 0);
         accountService.editAccount(1, newAccount);
         Account editedAccount = accountService.getAccountById(1);
         Assertions.assertEquals(newAccount.getEDB(), editedAccount.getEDB());
@@ -28,11 +29,12 @@ public class AccountTests {
         Assertions.assertEquals(newAccount.getAddress(), editedAccount.getAddress());
     }
 
-    //newAccount isn't null, the id doesn't exist in db
+    // newAccount isn't null, the id doesn't exist in db
     // here we expect the function to throw an exception
     @Test
     void testEditAccountA1B2() throws AccountException {
-        Account newAccount = new Account("testAkaunt", "", "", "", 1, 0, 0);
+        Account newAccount = new Account("testAkaunt", "", "",
+                "", 1, 0, 0);
         Assertions.assertThrows(AccountException.class, () -> accountService.editAccount(-2, newAccount));
     }
 

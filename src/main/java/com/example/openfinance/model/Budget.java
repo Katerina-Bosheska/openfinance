@@ -1,10 +1,11 @@
 package com.example.openfinance.model;
 
 import com.sun.istack.NotNull;
+import lombok.Getter;
 
 import javax.persistence.*;
 
-
+@Getter
 @Entity
 public class Budget {
 
@@ -71,79 +72,8 @@ public class Budget {
         return this.Id == other.getId();
     }
 
-    //GETTERS
-
-    public int getId() {
-        return Id;
+    public void setId(int id){
+        this.Id = id;
     }
 
-    public Account getBudgetUser() {
-        return budgetUser;
-    }
-
-    public String getBill() {
-        return bill;
-    }
-
-    public String getProgram() {
-        return program;
-    }
-
-    public String getKonto() {
-        return konto;
-    }
-
-    public int getYear() {
-        return year;
-    }
-
-    public double getBudgetAmount() {
-        return budgetAmount;
-    }
-
-    public double getBudgetPlan() {
-        return budgetPlan;
-    }
-
-    public double getBudgetRealization() {
-        return budgetRealization;
-    }
-
-    //SETTERS
-
-    public void setId(int id) {
-        Id = id;
-    }
-
-    public void setBudgetUser(Account budgetUser) {
-        this.budgetUser = budgetUser;
-    }
-
-    public void setBill(String bill) {
-        this.bill = bill;
-    }
-
-    public void setProgram(String program) {
-        this.program = program;
-    }
-
-    public void setKonto(String konto) {
-        this.konto = konto;
-    }
-
-    public void setYear(int year) {
-        this.year = year;
-    }
-
-    public void setBudgetAmount(double budgetAmount) {
-        this.budgetAmount = budgetAmount;
-    }
-
-    public void setBudgetPlan(double budgetPlan) {
-        this.budgetPlan = budgetPlan;
-    }
-
-    public void setBudgetRealization(double budgetRealization) {
-        this.budgetRealization = budgetRealization;
-    }
 }

@@ -92,7 +92,8 @@ public class BudgetWebLayerTester {
 
         Mockito.when(budgetService.getAllBudgetTransactions()).thenReturn(budgetList);
 
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/budget").contentType(MediaType.APPLICATION_JSON))
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/budget")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError())
                 .andReturn();
 
@@ -103,7 +104,8 @@ public class BudgetWebLayerTester {
     public void addBudgetTransactionReturnsOk() throws Exception {
 
         Account account = new Account("Ministerstvo za zdravstvo", "421231231");
-        Budget budgetTransaction = new Budget(account, "Osnoven budget", "Zdravstveno osiguruvanje", "Blok dotacii", 2018, 16140905, 534300, 5345700);
+        Budget budgetTransaction = new Budget(account, "Osnoven budget", "Zdravstveno osiguruvanje",
+                "Blok dotacii", 2018, 16140905, 534300, 5345700);
 
         Mockito.when(budgetService.transactionExistsById(Mockito.any(Integer.class))).thenReturn(false);
         Mockito.when(budgetService.createBudgetTransaction(Mockito.any(Budget.class))).thenReturn(budgetTransaction);

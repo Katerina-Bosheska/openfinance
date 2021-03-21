@@ -107,29 +107,26 @@ public class FilterRecipientTests {
 
     @Test
     public void testFindByRecipientAndPayer(){
-
         List<AccountTransaction> expectedResult = new ArrayList<>();
         expectedResult.add(transactions.get(0));
         expectedResult.add(transactions.get(1));
         expectedResult.add(transactions.get(2));
-
         Mockito.when(transactionRepository.findAll()).thenReturn(transactions);
-
-        List<AccountTransaction> result = transactionService.findAllByRecipientAndPayerName(2, "здравство");
+        List<AccountTransaction> result =
+                transactionService.findAllByRecipientAndPayerName(2, "здравство");
 
         Assertions.assertEquals(result, expectedResult);
-
     }
 
     @Test
     public void testFindMaxRecipient(){
         Account expectedResult = this.accounts.get(1);
-
         LocalDate date = this.createLocalDate("2021-01-10");
 
         Mockito.when(accountRepository.findAll()).thenReturn(this.accounts);
 
-        Mockito.when(transactionRepository.findAllByRecipientAndDateAfterAndDateBefore(Mockito.any(Account.class), Mockito.eq(date), Mockito.eq(date)))
+        Mockito.when(transactionRepository.findAllByRecipientAndDateAfterAndDateBefore(Mockito.any(Account.class),
+                Mockito.eq(date), Mockito.eq(date)))
                 .thenAnswer(
                         invocation -> {
                             Object argument = invocation.getArguments()[0];

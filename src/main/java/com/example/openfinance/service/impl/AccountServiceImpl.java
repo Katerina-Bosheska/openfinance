@@ -19,14 +19,6 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepository;
 
     @Override
-    public Account createAccount(Account account) throws AccountException {
-        if(accountRepository.existsById(account.getId())){
-            throw new AccountException("Account already exists!");
-        }
-        return accountRepository.save(account);
-    }
-
-    @Override
     public Account getAccountById(int id) {
         return accountRepository.getOne(id);
     }
@@ -34,6 +26,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
+    }
+
+    @Override
+    public Account createAccount(Account account) throws AccountException {
+        if(accountRepository.existsById(account.getId())){
+            throw new AccountException("Account already exists!");
+        }
+        return accountRepository.save(account);
     }
 
     @Override
@@ -60,6 +60,8 @@ public class AccountServiceImpl implements AccountService {
         Account account = this.getAccountById(id);
         return account.getTransactions();
     }
+
+    //FILTER METHODS
 
     @Override
     public List<Account> findAllByEdb(String edb) {

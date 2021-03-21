@@ -24,9 +24,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private AccountRepository accountRepository;
 
-    // CREATE, EDIT, DELETE, READ
 
-    // ZA TESTIRANJE
     @Override
     public AccountTransaction createTransaction(AccountTransaction transaction) throws AccountException {
         if(transactionRepository.existsById(transaction.getId()))
@@ -180,7 +178,6 @@ public class TransactionServiceImpl implements TransactionService {
         return null;
     }
 
-    // ZA TESTIRANJE
     @Override
     public List<AccountTransaction> filterTransactions(String payerName, String recipientName, LocalDate from, LocalDate to) {
         if(payerName.equals("") && recipientName.equals("") && from == null && to == null)
@@ -226,12 +223,13 @@ public class TransactionServiceImpl implements TransactionService {
         return filtered;
     }
 
-    //ZA TESTIRANJE
     @Override
     public List<AccountTransaction> findTopTransactions(LocalDate from, LocalDate to, int number) {
-        if(to.isBefore(from))
+        if(from == null)
             throw new IllegalArgumentException();
-        if(from == null || to == null)
+        if(to == null)
+            throw new IllegalArgumentException();
+        if(to.isBefore(from))
             throw new IllegalArgumentException();
         List<AccountTransaction> topTransactions = this.findAllTransactionsBetweenDate(from, to);
         if(topTransactions.size() < number){

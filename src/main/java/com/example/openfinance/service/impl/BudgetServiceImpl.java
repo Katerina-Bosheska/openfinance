@@ -18,7 +18,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Autowired
     private BudgetRepository budgetRepository;
-
     @Autowired
     private AccountRepository accountRepository;
 
@@ -29,7 +28,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public Budget createBudgetTransaction(Budget budgetTransaction) {
-
         return budgetRepository.save(budgetTransaction);
     }
 
@@ -50,7 +48,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public List<Budget> getAllBudgetTransactions() throws TransactionNotFoundException {
-
         List<Budget> budgetTransactions = budgetRepository.findAll();
         if(budgetTransactions.size() == 0)
             throw new TransactionNotFoundException("No transactions were found.");
@@ -59,7 +56,6 @@ public class BudgetServiceImpl implements BudgetService {
 
     @Override
     public List<Budget> findAllByYear(int year) {
-
         return budgetRepository.findAllByYear(year);
     }
 
